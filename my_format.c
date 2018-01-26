@@ -67,6 +67,15 @@ void set_boot_record(void *buffer)
 	sprintf((char*)(&br.file_system_type), "FAT12  ");
 	
 	memcpy(buffer, &br, 63);
+	
+	/*Output as per exercise description*/
+	printf("sector_size: %d\n", br.sector_size);
+	printf("sectors_per_cluster: %d\n", br.sectors_per_cluster);
+	printf("reserved_sector_count: %d\n", br.reserved_sector_count);
+	printf("number_of_fats: %d\n", br.number_of_fats);
+	printf("number_of_dirents: %d\n", br.number_of_dirents);
+    printf("sector_count: %d\n", br.sector_count);
+	
 	return;
 }
 
