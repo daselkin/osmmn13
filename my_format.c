@@ -24,10 +24,12 @@ int fd_write(int sector_number, uint8_t *buffer){
 	int dest, len;
 	dest = lseek(fid, sector_number * DEFAULT_SECTOR_SIZE, SEEK_SET);
 	if (dest != sector_number * DEFAULT_SECTOR_SIZE){
+		free(buffer);
 		perror("fd_write");
 	}
 	len = write(fid, buffer, DEFAULT_SECTOR_SIZE);
 	if (len != DEFAULT_SECTOR_SIZE){
+		free(buffer);
 		perror("fd_write");
 	}
 	return len;
@@ -54,7 +56,7 @@ void set_boot_record(void *buffer)
 	br.sectors_hidden = 0;
 	br.sector_count_large = 0;
 	
-	br.drive_number = 0;
+	br.drive_num = 0;
 	br.reserved1 = 0;
 	br.boot_signature = 0;
 	
@@ -70,12 +72,12 @@ void set_fat_entry(uint8_t *buffer, int fat_index, uint16_t value)
 	word_index = (fat_index/2)*3; /*Strating index of a 3-byte segment*/
 	if( fat_index % 2 == 0) {	
 		/*Write value on 12 higher-order bits:*/
-		buffer[word_index] = (value & 0x0ff0) >> 4	/*8 higher-order bits*/
-		buffer[word_index+1] =  ((value & 0x000f) << 4) + (buffer[word_index+1] & 0x0f) /*4 lower-order bits*/
+		buffer[word_index] = (value & 0x0ff0) >> 4;	/*8 higher-order bits*/
+		buffer[word_index+1] =  ((value & 0x000f) << 4) + (buffer[word_index+1] & 0x0f); /*4 lower-order bits*/
 	} else {
 		/*Write value on 12 lower-order bits*/
-		buffer[word_index+1] =  ((value & 0x0f00) >> 8) + (buffer[word_index+1] & 0xf0) /*4 higher-order bits*/
-		buffer[word_index+2] = value & 0x00ff	/*8 lower-order bits*/
+		buffer[word_index+1] =  ((value & 0x0f00) >> 8) + (buffer[word_index+1] & 0xf0); /*4 higher-order bits*/
+		buffer[word_index+2] = value & 0x00ff;	/*8 lower-order bits*/
 	}
 	return;
 }
@@ -120,16 +122,16 @@ int main(int argc, char *argv[])
 	}
 	
 	/*1. Initialize and write boot sector*/
-	empty_sector(fat_sector);
-	set_boot_record(fat_sector);
-	fd_write(0, fat_sector);
+	empty_sector(sector);
+	set_boot_record(sector);
+	fd_write(0, sector);
 	
 	/*2. Initialize FAT 1 and FAT2 tables*/
 	/*Entires 0 & 1 for FAT1 and FAT2*/
-	empty_sector(fat_sector);
-	create_fat_table(fat_sector);
-	fd_write(1, fat_sector);	/*FAT1*/
-	fd_write(10, fat_sector);	/*FAT2*/
+	empty_sector(sector);
+	create_fat_table(sector);
+	fd_write(1, sector);	/*FAT1*/
+	fd_write(10, sector);	/*FAT2*/
 	
 	/*Remaining FAT entries are empty (0x000)*/
 	empty_sector(fat_sector);
@@ -146,6 +148,7 @@ int main(int argc, char *argv[])
 	// untouched. What are the pros/cons?)
 	/* No need to handle the data block. If the dirents and FAT tables are empty, the actual data in the data block is ignored*/
 	
+	free(buffer);
 	close(fid);
 	return 0;
 }
