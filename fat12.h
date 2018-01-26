@@ -5,6 +5,7 @@
 #define __FAT_12__
 
 #define DEFAULT_SECTOR_SIZE                 512
+#define NUMBER_OF_SECTORS					2880
 
 #define ONE_K                               1024
 #define ONE_MEG                             (1024 * 1024)

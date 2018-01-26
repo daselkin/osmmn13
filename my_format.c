@@ -51,7 +51,7 @@ void set_boot_record(void *buffer)
 	br.reserved_sector_count = 1;
 	br.number_of_fats = 2;
 	br.number_of_dirents = 224;
-	br.sector_count = 2880;
+	br.sector_count = NUMBER_OF_SECTORS;
 	br.media_type = 0xf0;
 	br.fat_size_sectors = 9;
 	br.sectors_per_track = 18;
@@ -150,6 +150,8 @@ int main(int argc, char *argv[])
 	// Step 4. Handle data block (e.g you can zero them or just leave 
 	// untouched. What are the pros/cons?)
 	/* No need to handle the data block. If the dirents and FAT tables are empty, the actual data in the data block is ignored*/
+	/* Instead, we'll just write an empty sector to the final sector */
+	fd_write(NUMBER_OF_SECTORS-1, sector);
 	
 	free(sector);
 	close(fid);
