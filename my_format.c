@@ -91,9 +91,6 @@ void set_fat_entry(uint8_t *buffer, int fat_index, uint16_t value)
 	return;
 }
 		
-		
-}
-
 /*Fills buffer (assumed to be initalized with 0s) with the first two entries of a FAT table*/
 /*This is done per the description in https://www.win.tue.nl/~aeb/linux/fs/fat/fat-1.html*/
 void create_fat_table(void *buffer)
