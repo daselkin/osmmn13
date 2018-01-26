@@ -45,7 +45,7 @@ void set_boot_record(void *buffer)
 	
 	br.bootjmp[0] = 0xeb;
 	br.bootjmp[2] = 0x90;
-	sprintf(&br.oem_id, "MSWIN4.1");
+	sprintf((char*)(&br.oem_id), "MSWIN4.1");
 	br.sector_size = DEFAULT_SECTOR_SIZE;
 	br.sectors_per_cluster = 1;
 	br.reserved_sector_count = 1;
@@ -62,9 +62,9 @@ void set_boot_record(void *buffer)
 	br.drive_num = 0x80;
 	br.reserved1 = 0;
 	br.boot_signature = 0x29;
-	br.volume_id = (now.tm_sec) + (now.tm_min << 5)  + (now.tm_hour << 11) + (now.tm_mday << 16) + (now.tm_mon << 21) + (now.tm_year << 25)
-	sprintf(&br.volume_label, "MAMAN_13_OS");
-	sprintf(&br.file_system_type = "FAT12   ");
+	br.volume_id = (now.tm_sec) + (now.tm_min << 5)  + (now.tm_hour << 11) + (now.tm_mday << 16) + (now.tm_mon << 21) + (now.tm_year << 25);
+	sprintf((char*)(&br.volume_label), "MAMAN_13_OS");
+	sprintf((char*)(&br.file_system_type), "FAT12   ");
 	
 	
 	
@@ -145,12 +145,12 @@ int main(int argc, char *argv[])
 	/*Remaining FAT entries are empty (0x000)*/
 	empty_sector(fat_sector);
 	for(sector_idx=2; sector_idx < 10; sector_idx++) {
-		fd_write(sector_idx, fat_sector);
-		fd_write(sector_idx+9, fat_sector);
+		fd_write(sector_idx, sector);
+		fd_write(sector_idx+9, sector);
 	}
 	
 	/* 3. Set direntires as free. Just fill it with zeros (as per sec.8 of the exercise) */
-	for(sector_idx=19; sector_idx<33; fd_write(sector_idx++, fat_sector));
+	for(sector_idx=19; sector_idx<33; fd_write(sector_idx++, sector));
 	
 	
 	// Step 4. Handle data block (e.g you can zero them or just leave 
