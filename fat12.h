@@ -78,7 +78,10 @@ typedef struct {
 	/*Additional FAT12/16 fields*/
 	uint8_t		drive_num;				/* 36 0x00 for floppy, 0x80 for hard drive */
 	uint8_t		reserved1;				/* 37 reserved bit. Should be set to 0 */
-	uint8_t		boot_signature;			/* 38 Boot signature. Set to 0 to avoid handling naming and ID for the volume */
+	uint8_t		boot_signature;			/* 38 Boot signature. Set to 0 to avoid handling naming and ID for the volume, or to 0x29 to deal with naming */
+	uint32_t	volume_id;				/* 39 Volume ID */
+	uint8_t		volume_label[11];		/* 43 Volume Label */
+	uint8_t		file_system_type[8]		/* 54 File System type */
 	
 } __attribute__ ((packed)) boot_record_t;
 

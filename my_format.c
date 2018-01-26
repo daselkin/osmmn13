@@ -27,7 +27,7 @@ int fd_write(int sector_number, uint8_t *buffer){
 		perror("fd_write");
 	}
 	len = write(fid, buffer, DEFAULT_SECTOR_SIZE);
-	if (len != bps){
+	if (len != DEFAULT_SECTOR_SIZE){
 		perror("fd_write");
 	}
 	return len;
@@ -58,7 +58,7 @@ void set_boot_record(void *buffer)
 	br.reserved1 = 0;
 	br.boot_signature = 0;
 	
-	memcpy(buffer, &br, 38);
+	memcpy(buffer, &br, 63);
 	return;
 }
 
@@ -89,6 +89,7 @@ void create_fat_table(void *buffer)
 {
 	/*set FAT entry 0*/
 	set_fat_entry(buffer, 0, 0xf0f); /*Media descriptor is 0xf0, remaining bits are set to 1*/
+	/*set FAT entry 1*/
 	set_fat_entry(buffer, 1, 0xfff); /*EOF marker*/
 }
 
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
 
 	
 	/*Initialize the sector buffer*/
-	sector = malloc(sizeof(char)*BYTES_PER_SECTOR);
+	sector = malloc(sizeof(uint8_t)*DEFAULT_SECTOR_SIZE);
 	if( sector == NULL ) {
 		printf("Insufficient memory");
 		return -1;
