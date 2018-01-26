@@ -23,10 +23,10 @@ void empty_sector(uint8_t *buffer)
 int fd_write(int sector_number, uint8_t *buffer){
 	int dest, len;
 	dest = lseek(fid, sector_number * DEFAULT_SECTOR_SIZE, SEEK_SET);
-	if (dest != sector_number * bps){
+	if (dest != sector_number * DEFAULT_SECTOR_SIZE){
 		perror("fd_write");
 	}
-	len = write(fid, buffer, bps);
+	len = write(fid, buffer, DEFAULT_SECTOR_SIZE);
 	if (len != bps){
 		perror("fd_write");
 	}
@@ -58,7 +58,7 @@ void set_boot_record(void *buffer)
 	br.reserved1 = 0;
 	br.boot_signature = 0;
 	
-	memcpy(buffer, &br, 32);
+	memcpy(buffer, &br, 38);
 	return;
 }
 

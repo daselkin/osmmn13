@@ -76,9 +76,9 @@ typedef struct {
     uint32_t    sector_count_large;     /* 32 big total sectors */ 	
 	
 	/*Additional FAT12/16 fields*/
-	uint8_t		drive_num				/* 36 0x00 for floppy, 0x80 for hard drive */
-	uint8_t		reserved1				/* 37 reserved bit. Should be set to 0 */
-	uint8_t		boot_signature			/* 38 Boot signature. Set to 0 to avoid handling naming and ID for the volume */
+	uint8_t		drive_num;				/* 36 0x00 for floppy, 0x80 for hard drive */
+	uint8_t		reserved1;				/* 37 reserved bit. Should be set to 0 */
+	uint8_t		boot_signature;			/* 38 Boot signature. Set to 0 to avoid handling naming and ID for the volume */
 	
 } __attribute__ ((packed)) boot_record_t;
 
