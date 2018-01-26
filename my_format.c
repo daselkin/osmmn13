@@ -64,10 +64,7 @@ void set_boot_record(void *buffer)
 	br.boot_signature = 0x29;
 	br.volume_id = (now.tm_sec) + (now.tm_min << 5)  + (now.tm_hour << 11) + (now.tm_mday << 16) + (now.tm_mon << 21) + (now.tm_year << 25);
 	sprintf((char*)(&br.volume_label), "MAMAN_13_OS");
-	sprintf((char*)(&br.file_system_type), "FAT12   ");
-	
-	
-	
+	sprintf((char*)(&br.file_system_type), "FAT12  ");
 	
 	memcpy(buffer, &br, 63);
 	return;
