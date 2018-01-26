@@ -38,11 +38,14 @@ int fd_write(int sector_number, uint8_t *buffer){
 void set_boot_record(void *buffer)
 {
 	boot_record_t br;
-	char oem[8] = "MSWIN4.1"
+	time_t t = time(NULL);
+	struct tm now;
+	
+	now = *localtime(&t);
 	
 	br.bootjmp[0] = 0xeb;
 	br.bootjmp[2] = 0x90;
-	strcpy(br.oem_id, oem);
+	sprintf(&br.oem_id, "MSWIN4.1");
 	br.sector_size = DEFAULT_SECTOR_SIZE;
 	br.sectors_per_cluster = 1;
 	br.reserved_sector_count = 1;
@@ -56,9 +59,15 @@ void set_boot_record(void *buffer)
 	br.sectors_hidden = 0;
 	br.sector_count_large = 0;
 	
-	br.drive_num = 0;
+	br.drive_num = 0x80;
 	br.reserved1 = 0;
-	br.boot_signature = 0;
+	br.boot_signature = 0x29;
+	br.volume_id = (now.tm_sec) + (now.tm_min << 5)  + (now.tm_hour << 11) + (now.tm_mday << 16) + (now.tm_mon << 21) + (now.tm_year << 25)
+	sprintf(&br.volume_label, "MAMAN_13_OS");
+	sprintf(&br.file_system_type = "FAT12   ");
+	
+	
+	
 	
 	memcpy(buffer, &br, 63);
 	return;
