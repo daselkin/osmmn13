@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 	fd_write(10, sector);	/*FAT2*/
 	
 	/*Remaining FAT entries are empty (0x000)*/
-	empty_sector(fat_sector);
+	empty_sector(sector);
 	for(sector_idx=2; sector_idx < 10; sector_idx++) {
 		fd_write(sector_idx, sector);
 		fd_write(sector_idx+9, sector);
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
 	// untouched. What are the pros/cons?)
 	/* No need to handle the data block. If the dirents and FAT tables are empty, the actual data in the data block is ignored*/
 	
-	free(buffer);
+	free(sector);
 	close(fid);
 	return 0;
 }
